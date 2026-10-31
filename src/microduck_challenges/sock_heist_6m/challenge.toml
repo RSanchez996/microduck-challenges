@@ -15,30 +15,30 @@ seed           = 1
 
 [params.forward_reward]
 label = "Walk on green"
-value = 2.0
+value = 3.49107142857143
 min   = 0.5
 max   = 5.0
 
 [params.progress_reward]
 label = "Walk forward"
-value = 8.0
+value = 12.6031746031746
 min   = 0.0
 max   = 16.0
 
 [params.freeze_reward]
 label = "Freeze while watched"
-value = 2.0
+value = 1.6547619047619
 min   = 0.0
 max   = 6.0
 
 [params.upright_reward]
 label = "Stay upright"
-value = 2.0
+value = 1.38392857142857
 min   = 0.5
 max   = 5.0
 
 [params.step_reward]
 label = "Lift your feet"
-value = 3.0
+value = 3.1547619047619
 min   = 0.0
 max   = 6.0
