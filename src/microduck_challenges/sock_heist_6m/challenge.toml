@@ -15,42 +15,55 @@ seed           = 12
 
 [params.forward_reward]
 label = "Walk on green"
-value = 2.97321428571429
+value = 2.0
 min   = 0.5
 max   = 5.0
 
 [params.progress_reward]
 label = "Walk forward"
-value = 13.047619047619
+value = 9.0
 min   = 0.0
 max   = 16.0
 
 [params.freeze_reward]
 label = "Freeze while watched"
-value = 1.98809523809524
+value = 2.0
 min   = 0.0
 max   = 6.0
 
 [params.upright_reward]
 label = "Stay upright"
-value = 1.97321428571429
+value = 2.0
 min   = 0.5
 max   = 5.0
 
 [params.step_reward]
 label = "Lift your feet"
-value = 3.03571428571429
+value = 3.0
 min   = 0.0
 max   = 6.0
 
 [params.launch_reward]
 label = "Green launch"
-value = 1.03571428571429
+value = 1.0
 min = 0.0
 max = 3.0
 
 [params.brake_reward]
 label = "Red braking"
-value = 0.0
+value = 0.5
 min = 0.0
 max = 3.0
+
+
+[params.green_distance_reward]
+label = "Max green distance"
+value = 3.0
+min = 0.0
+max = 14.0
+
+[params.sprint_factor]
+label = "Sprint factor"
+value = 1.5
+min = 1.0
+max = 1.6

@@ -311,7 +311,13 @@ def make_env_cfg(
     # freezes on red 8.29: the walker reaches ~0.45 of its command, which
     # track_linear_velocity barely pays over a statue.
     cfg.rewards["progress"] = RewardTermCfg(
-        func=rewards.progress, weight=knobs["progress_reward"], params={"command_name": "twist"}
+        func=rewards.progress,
+        weight=knobs["progress_reward"],
+        params={
+            "command_name": "twist",
+            "speed_factor": knobs["sprint_factor"],
+            "speed_cap": 1.8,
+        },
     )
 
 
@@ -326,6 +332,15 @@ def make_env_cfg(
         func=rewards.red_braking,
         weight=knobs["brake_reward"],
         params={"command_name": "twist"},
+    )
+    
+    cfg.rewards["green_distance"] = RewardTermCfg(
+        func=rewards.green_distance,
+        weight=knobs["green_distance_reward"],
+        params={
+            "command_name": "twist",
+            "speed_cap": 1.8,
+        },
     )
 
     # Action smoothness: stage-0 value; the action_rate_weight curriculum below
@@ -905,8 +920,8 @@ RL_CFG = RslRlOnPolicyRunnerCfg(
     wandb_project="mjlab_microduck",
     experiment_name="sock_heist_6m",  # logs/rsl_rl/sock_heist_6m/
     resume=True,
-    load_run=r".*_run-1101-1249$",
-    load_checkpoint=r"^model_1200\.pt$",
+    load_run=r".*_run-1101-1427$",
+    load_checkpoint=r"^model_1499\.pt$",
     run_name="sock_heist_6m",
     save_interval=100,  # warm-started tug runs peaked early and fell between 250-iteration checkpoints
     num_steps_per_env=24,

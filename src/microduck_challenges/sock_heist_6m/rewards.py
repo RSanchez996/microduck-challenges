@@ -14,10 +14,11 @@ def freeze(env, command_name: str, std: float) -> torch.Tensor:
     return torch.where(watch, torch.exp(-((term.drift() / std) ** 2)), 0.0)
 
 
-def progress(env, command_name: str) -> torch.Tensor:
-    """Forward speed, up to the command: pays walking on green and nothing on red (the command is zero)."""
+def progress(env, command_name: str, speed_factor: float = 1.0, speed_cap: float = 1.8) -> torch.Tensor:
     vx = env.scene["robot"].data.root_link_lin_vel_b[:, 0].clamp(min=0.0)
-    return torch.minimum(vx, env.command_manager.get_command(command_name)[:, 0])
+    cmd = env.command_manager.get_command(command_name)[:, 0]
+    target = (cmd * speed_factor).clamp(max=speed_cap)
+    return torch.minimum(vx, target)
 
 
 def caught(env, command_name: str) -> torch.Tensor:
@@ -105,4 +106,31 @@ def red_braking(env, command_name: str) -> torch.Tensor:
         turning,
         -speed_squared,
         torch.zeros_like(speed_squared),
+    )
+
+def green_distance(
+    env,
+    command_name: str,
+    speed_cap: float = 1.8,
+) -> torch.Tensor:
+    """Reward forward progress during green phases."""
+
+    term = env.command_manager.get_term(command_name)
+    red, _, _ = term.stepped()
+
+    k = env.episode_length_buf - 1
+
+    green = (
+        (k >= lights.steps(lights.SETTLE_S))
+        & ~red
+    )
+
+    vx = env.scene["robot"].data.root_link_lin_vel_w[:, 0]
+
+    reward = vx.clamp(min=-0.5, max=speed_cap)
+
+    return torch.where(
+        green,
+        reward,
+        torch.zeros_like(reward),
     )
