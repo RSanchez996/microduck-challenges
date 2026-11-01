@@ -54,3 +54,55 @@ def lane_state(env, command_name: str) -> torch.Tensor:
     term = env.command_manager.get_term(command_name)
     trunk = term.trunk
     return torch.stack([trunk[:, 1] - term.lane_y, lights.yaw_of(trunk[:, 3:7])], dim=-1)
+
+
+def green_launch(env, command_name: str, window_s: float = 0.5) -> torch.Tensor:
+    """Reward quickly reaching commanded forward velocity after green starts."""
+    term = env.command_manager.get_term(command_name)
+    k = env.episode_length_buf - 1
+
+    ends = term.onset + term.length
+    last_end = torch.where(
+        ends <= k[:, None],
+        ends,
+        torch.zeros_like(ends),
+    ).amax(dim=1)
+
+    start = torch.maximum(
+        last_end,
+        torch.full_like(k, lights.steps(lights.SETTLE_S)),
+    )
+
+    cmd = env.command_manager.get_command(command_name)[:, 0]
+    vx = env.scene["robot"].data.root_link_lin_vel_b[:, 0]
+
+    early_green = (
+        (cmd > 0.01)
+        & (k >= start)
+        & ((k - start) < lights.steps(window_s))
+    )
+
+    tracking = (vx / cmd.clamp_min(0.1)).clamp(0.0, 1.0)
+
+    return torch.where(
+        early_green,
+        tracking,
+        torch.zeros_like(vx),
+    )
+
+
+def red_braking(env, command_name: str) -> torch.Tensor:
+    """Penalize residual horizontal speed during the giant's head turn."""
+    term = env.command_manager.get_term(command_name)
+    red, _, watch = term.stepped()
+
+    vxy = env.scene["robot"].data.root_link_lin_vel_b[:, :2]
+    speed_squared = (vxy / 1.2).square().sum(dim=-1)
+
+    turning = red & ~watch
+
+    return torch.where(
+        turning,
+        -speed_squared,
+        torch.zeros_like(speed_squared),
+    )

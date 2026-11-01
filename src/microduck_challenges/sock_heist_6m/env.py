@@ -314,6 +314,20 @@ def make_env_cfg(
         func=rewards.progress, weight=knobs["progress_reward"], params={"command_name": "twist"}
     )
 
+
+    # Extra rewards for faster green starts and earlier red braking.
+    cfg.rewards["green_launch"] = RewardTermCfg(
+        func=rewards.green_launch,
+        weight=knobs["launch_reward"],
+        params={"command_name": "twist", "window_s": 0.5},
+    )
+
+    cfg.rewards["red_braking"] = RewardTermCfg(
+        func=rewards.red_braking,
+        weight=knobs["brake_reward"],
+        params={"command_name": "twist"},
+    )
+
     # Action smoothness: stage-0 value; the action_rate_weight curriculum below
     # ramps it -0.1 → -1.0 by iter 1500.
     cfg.rewards["action_rate_l2"].weight = -0.1
@@ -890,6 +904,9 @@ RL_CFG = RslRlOnPolicyRunnerCfg(
     ),
     wandb_project="mjlab_microduck",
     experiment_name="sock_heist_6m",  # logs/rsl_rl/sock_heist_6m/
+    resume=True,
+    load_run=r".*_run-1101-1249$",
+    load_checkpoint=r"^model_1200\.pt$",
     run_name="sock_heist_6m",
     save_interval=100,  # warm-started tug runs peaked early and fell between 250-iteration checkpoints
     num_steps_per_env=24,
