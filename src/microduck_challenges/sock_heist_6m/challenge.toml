@@ -15,13 +15,13 @@ seed           = 12
 
 [params.forward_reward]
 label = "Walk on green"
-value = 2.02678571428571
+value = 2.45535714285714
 min   = 0.5
 max   = 5.0
 
 [params.progress_reward]
 label = "Walk forward"
-value = 7.96825396825397
+value = 11.968253968254
 min   = 0.0
 max   = 16.0
 
