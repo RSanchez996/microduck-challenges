@@ -1,69 +1,66 @@
-# The 6 m Sock Heist: walk 6 m to steal a giant microduck's socks, and freeze whenever it turns its head.
-# Moving more than 3 cm while it looks is caught; the learner starts as the reference walker.
+# SPEED V2 for the 6 m Sock Heist. NEW PPO run from official WalkerActor.
 event = "sock-heist-6m"
-task  = "Mjlab-SockHeist6m-MicroDuck"
-kind  = "perpetual"
+task = "Mjlab-SockHeist6m-MicroDuck"
+kind = "perpetual"
 
-# What the policy reads in each command group: publish writes it in the manifest.
 [command]
-twist = "[vx: the speed the Arena times you at, 0 from the moment the giant starts turning its head until it looks away; unused; yaw rate: the lane's heading hold, 0 while the giant turns or looks]"
+twist = "[vx: Arena speed on green (zero on red); unused; yaw rate: lane heading hold]"
 
-[recipe]                  # the first training, as is
-num_envs       = 4096
-max_iterations = 1500
-seed           = 22
+[recipe]
+num_envs = 4096
+max_iterations = 3000
+seed = 22
 
 [params.forward_reward]
-label = "Walk on green"
-value = 2.0
-min   = 0.5
-max   = 5.0
+label = "Legacy commanded-speed tracking (disabled)"
+value = 0.0
+min = 0.0
+max = 1.0
 
-[params.progress_reward]
-label = "Walk forward"
+[params.green_distance_reward]
+label = "Green forward speed"
 value = 9.0
-min   = 0.0
-max   = 16.0
+min = 0.0
+max = 16.0
+
+[params.sprint_factor]
+label = "Rewarded speed multiplier"
+value = 2.0
+min = 1.0
+max = 2.5
+
+[params.speed_cap]
+label = "Maximum rewarded sprint speed (m/s)"
+value = 2.4
+min = 1.2
+max = 3.0
+
+[params.stop_reward]
+label = "Stop quickly on red"
+value = 2.0
+min = 0.0
+max = 6.0
 
 [params.freeze_reward]
-label = "Freeze while watched"
+label = "Freeze within 3cm while watched"
 value = 2.0
-min   = 0.0
-max   = 6.0
+min = 0.0
+max = 6.0
 
-[params.upright_reward]
-label = "Stay upright"
-value = 2.0
-min   = 0.5
-max   = 5.0
-
-[params.step_reward]
-label = "Lift your feet"
-value = 3.0
-min   = 0.0
-max   = 6.0
-
-[params.launch_reward]
-label = "Green launch"
+[params.brake_reward]
+label = "Braking during head turn"
 value = 1.0
 min = 0.0
 max = 3.0
 
-[params.brake_reward]
-label = "Red braking"
-value = 0.5
-min = 0.0
-max = 3.0
+[params.upright_reward]
+label = "Stay upright"
+value = 2.0
+min = 0.5
+max = 5.0
 
-
-[params.green_distance_reward]
-label = "Max green distance"
+[params.step_reward]
+label = "Lift feet on green"
 value = 3.0
 min = 0.0
-max = 14.0
-
-[params.sprint_factor]
-label = "Sprint factor"
-value = 1.5
-min = 1.0
-max = 1.6
+max = 6.0
