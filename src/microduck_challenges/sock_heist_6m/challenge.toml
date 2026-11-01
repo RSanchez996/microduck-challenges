@@ -45,12 +45,12 @@ max   = 6.0
 
 [params.launch_reward]
 label = "Green launch"
-value = 0.0
+value = 1.03571428571429
 min = 0.0
 max = 3.0
 
 [params.brake_reward]
 label = "Red braking"
-value = 0.5
+value = 0.0
 min = 0.0
 max = 3.0
