@@ -64,6 +64,6 @@ max = 14.0
 
 [params.sprint_factor]
 label = "Sprint factor"
-value = 1.5
+value = 1.50680329763464
 min = 1.0
 max = 1.6
