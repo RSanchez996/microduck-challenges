@@ -11,34 +11,34 @@ twist = "[vx: the speed the Arena times you at, 0 from the moment the giant star
 [recipe]                  # the first training, as is
 num_envs       = 4096
 max_iterations = 1000
-seed           = 1
+seed           = 12
 
 [params.forward_reward]
 label = "Walk on green"
-value = 3.49107142857143
+value = 2.02678571428571
 min   = 0.5
 max   = 5.0
 
 [params.progress_reward]
 label = "Walk forward"
-value = 12.6031746031746
+value = 7.96825396825397
 min   = 0.0
 max   = 16.0
 
 [params.freeze_reward]
 label = "Freeze while watched"
-value = 1.6547619047619
+value = 1.98809523809524
 min   = 0.0
 max   = 6.0
 
 [params.upright_reward]
 label = "Stay upright"
-value = 1.38392857142857
+value = 1.97321428571429
 min   = 0.5
 max   = 5.0
 
 [params.step_reward]
 label = "Lift your feet"
-value = 3.1547619047619
+value = 3.03571428571429
 min   = 0.0
 max   = 6.0
