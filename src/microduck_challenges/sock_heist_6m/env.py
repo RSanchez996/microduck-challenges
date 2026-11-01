@@ -878,7 +878,9 @@ def make_env_cfg(
             ],
         },
     )
-
+    # Sprint fine-tuning: reduce action smoothness penalty.
+    cfg.rewards["action_rate_l2"].weight = -0.4
+    cfg.curriculum.pop("action_rate_weight", None)
     return cfg
 
 
@@ -919,11 +921,11 @@ RL_CFG = RslRlOnPolicyRunnerCfg(
     ),
     wandb_project="mjlab_microduck",
     experiment_name="sock_heist_6m",  # logs/rsl_rl/sock_heist_6m/
-    resume=False, #True,
-    load_run= None, #r".*_run-1101-1427$",
-    load_checkpoint=None, #r"^model_1499\.pt$",
+    resume=True,
+    load_run=r".*_run-1101-1520$",
+    load_checkpoint=r"^model_1499\.pt$",
     run_name="sock_heist_6m",
-    save_interval=100,  # warm-started tug runs peaked early and fell between 250-iteration checkpoints
+    save_interval=50,  # warm-started tug runs peaked early and fell between 250-iteration checkpoints
     num_steps_per_env=24,
     max_iterations=50_000,
 )
